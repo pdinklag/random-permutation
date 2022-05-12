@@ -93,7 +93,7 @@ constexpr bool is_prime(uint64_t const p) {
         // first, check against small primes less than sqrt(p)
         {
             unsigned j = 2;
-            uint64_t i = SMALL_PRIMES[j];
+            i = SMALL_PRIMES[j];
             while(i <= m && j < NUM_SMALL_PRIMES - 1) {
                 if((p % i) == 0) return false;
                 i = SMALL_PRIMES[++j];
