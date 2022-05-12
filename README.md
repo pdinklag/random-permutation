@@ -1,6 +1,6 @@
 # Generating Random Permutations in C++
 
-This small C++20 library provides a pseudo-random permutation generator.
+This small header-only C++20 library provides a pseudo-random permutation generator.
 
 The key property of a permutation is that every number in it occurs exactly once, i.e., this can be used to generate a sequence of random numbers without repetitions. It can be seeded to reproduce the same permutation multiple times at will.
 
@@ -10,9 +10,9 @@ This repository also comes with a handy [command line tool](#command-line-tool).
 
 ### Requirements
 
-The library and command line tool are written in C++20, a corresponding compiler is required. This library has only been tested with GCC 11.
+The library and command line tool are written in C++20, a corresponding compiler is required. Tests have been done only with GCC 11.
 
-Furthermore, the build system is written for CMake.
+If you desire to use the [command line tool](#command-line-tool), you need CMake.
 
 ### License
 
@@ -48,26 +48,25 @@ This library extends the idea to support an arbitrary universe size of up to 2^6
 
 Randomness is achieved by applying a two-phase permutation: we first permute the original number, and then permute the permuted value offset by the random seed. The outcome is reasonably well distributed.
 
-## Library Usage
+## Usage
 
-The library is built using CMake. The recommended way to use it is to embed it into your project (e.g., as a git submodule) and link against the `random-permutation` target like so:
+The library is header only, so all you need to do is make sure it's in your include path and:
 
-```cmake
-add_subdirectory(path/to/random-permutation)
-target_link_libraries(my-target random-permutation)
+```cpp
+#include "random_permutation.hpp"
 ```
 
 ### API
 
-The API is very straightforward, here's an example that generates a random permutation of the first 100 numbers:
+The API is very straightforward. Here's an example that generates a random permutation of one hundred 16-bit numbers:
 
 ```cpp
-#include <random_permutation.hpp>
 #include <iostream>
+#include "random_permutation.hpp"
 
 int main(int argc, char** argv) {
-    // print a random permutation of the numbers from 0 to 100
-    auto perm = pdinklag::RandomPermutation(100);
+    // print the first 100 numbers from a random permutation of [0, 2^16-1]
+    auto perm = pdinklag::RandomPermutation(UINT16_MAX);
     for(unsigned i = 0; i < 100; i++) {
         std::cout << perm(x) << std::endl;
     }
@@ -77,7 +76,7 @@ int main(int argc, char** argv) {
 
 The system's high resolution timestamp is used as the random seed by default, which can be acquired by calling `pdinklag::RandomPermutation::timestamp()`. You can also provide an explicit random seed as the second parameter to the constructor.
 
-The `RandomPermutation` class also provides the iterators `begin` and `end`, allowing ranged for loops:
+The `RandomPermutation` class also provides the STL-style iterators `begin` and `end`, allowing ranged for loops:
 
 ```cpp
 #include <random_permutation.hpp>
@@ -91,9 +90,11 @@ int main(int argc, char** argv) {
 }
 ```
 
+You can also use the `at` iterator to start or stop at a certain point.
+
 ## Command Line Tool
 
-You can also use the provided command-line tool powered by the command line parser from [tlx](https://tlx.github.io/).
+If you need a permutation in a file, you can use the provided command-line tool powered by the [tlx](https://tlx.github.io/) command line parser.
 
 Build it as follows:
 
@@ -112,3 +113,4 @@ src/generate --help
 ```
 
 The output is one number per line in the standard output; process it as needed.
+

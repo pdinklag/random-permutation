@@ -32,6 +32,8 @@
 #include <cstdint>
 #include <iterator>
 
+#include "math_utils.hpp"
+
 namespace pdinklag {
 
 /**
@@ -43,15 +45,65 @@ namespace pdinklag {
  */
 class RandomPermutation {
 private:
-    // finds the largest prime p less than or equal to x that satisfies p = (3 mod 4)
-    static uint64_t prev_prime_3mod4(uint64_t const x);
+    // some common universe sizes and the corresponding primes that satisfy (3 mod 4)
+    struct CommonUniverse { uint64_t universe, prime; };
+    static constexpr CommonUniverse common_universes[] = {
+        { pow2(16) - 2, pow2(16) - 17 },
+        { pow2(16) - 1, pow2(16) - 17 },
+        { pow2(24) - 2, pow2(24) - 17 },
+        { pow2(24) - 1, pow2(24) - 17 },
+        { pow2(32) - 2, pow2(32) - 5 },
+        { pow2(32) - 1, pow2(32) - 5 },
+        { pow2(40) - 2, pow2(40) - 213 },
+        { pow2(40) - 1, pow2(40) - 213 },
+        { pow2(48) - 2, pow2(48) - 65 },
+        { pow2(48) - 1, pow2(48) - 65 },
+        { pow2(56) - 2, pow2(56) - 5 },
+        { pow2(56) - 1, pow2(56) - 5 },
+        { pow2(63) - 2, pow2(63) - 25 },
+        { pow2(63) - 1, pow2(63) - 25 },
+        { UINT64_MAX-1, 0xFFFFFFFFFFFFFF43ULL },
+        { UINT64_MAX,   0xFFFFFFFFFFFFFF43ULL },
+        { 0, 0 }
+    };
 
+    // provides a decent distribution of 64 bits
+    static constexpr uint64_t SHUFFLE1 = 0x9696594B6A5936B2ULL;
+    static constexpr uint64_t SHUFFLE2 = 0xD2165B4B66592AD6ULL;
+
+    // finds the largest prime p less than or equal to x that satisfies p = (3 mod 4)
+    static inline uint64_t prev_prime_3mod4(uint64_t const universe) {
+        // test if universe is common
+        for(unsigned i = 0; common_universes[i].prime > 0; i++) {
+            if(universe == common_universes[i].universe) {
+                return common_universes[i].prime;
+            }
+        }
+        
+        // otherwise, do it the hard way
+        uint64_t p = prime_predecessor(universe);
+        while((p & 3ULL) != 3ULL) {
+            p = prime_predecessor(p - 1);
+        }
+        return p;
+    }
+
+    // members
     uint64_t universe_;
     uint64_t seed_;
     uint64_t prime_;
 
     // permute the given number
-    uint64_t permute(uint64_t const x) const;
+    inline uint64_t permute(uint64_t const x) const {
+        if(x >= prime_) {
+            // map numbers in gap to themselves - shuffling will take care of this
+            return x;
+        } else {
+            // use quadratic residue
+            const uint64_t r = ((__uint128_t)x * (__uint128_t)x) % (__uint128_t)prime_;
+            return (x <= (prime_ >> 1ULL)) ? r : prime_ - r;
+        }
+    }
 
     class Iterator {
     private:
@@ -93,7 +145,7 @@ public:
     /**
      * \brief Initializes an empty permutation that contains only zero
      */
-    RandomPermutation();
+    inline RandomPermutation() : universe_(1), seed_(0), prime_(0) {}
     
     RandomPermutation(RandomPermutation const&) = default;
     RandomPermutation(RandomPermutation&&) = default;
@@ -106,7 +158,11 @@ public:
      * \param universe the size of the universe
      * \param seed the random seed
      */
-    RandomPermutation(uint64_t const universe, uint64_t const seed = timestamp());
+    RandomPermutation(uint64_t const universe, uint64_t const seed = timestamp())
+        : universe_(universe),
+          prime_(prev_prime_3mod4(universe)),
+          seed_((seed ^ SHUFFLE1) ^ SHUFFLE2) {
+    }
 
     /**
      * \brief Computes the i-th number of the permutation
@@ -114,7 +170,7 @@ public:
      * \param i the number to permute
      * \return the permuted number
      */
-    uint64_t operator()(uint64_t const i) const;
+    inline uint64_t operator()(uint64_t const i) const { return permute((seed_ + permute(i)) % universe_); }
 
     /**
      * \brief Returns an iterator over the entire permutation

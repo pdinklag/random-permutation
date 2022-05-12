@@ -1,5 +1,5 @@
 /**
- * prime_utils.hpp
+ * math_utils.hpp
  * part of pdinklag/random_permutation
  * 
  * MIT License
@@ -25,9 +25,21 @@
  * SOFTWARE.
  */
 
+#ifndef _MATH_UTILS_HPP
+#define _MATH_UTILS_HPP
+
 #include <bit>
+#include <cstdint>
 
 namespace pdinklag {
+
+/**
+ * \brief Computes 2 to the x-th power
+ * 
+ * \param x the exponent
+ * \return 2 to the x-th power
+ */
+constexpr uint64_t pow2(int x) { return uint64_t(1) << x; }
 
 /**
  * \brief Computes the integer square root of the given number (rounded down)
@@ -116,3 +128,5 @@ constexpr uint64_t prime_predecessor(uint64_t p) {
 }
 
 }
+
+#endif
