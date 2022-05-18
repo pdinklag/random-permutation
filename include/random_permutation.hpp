@@ -36,6 +36,8 @@
 
 namespace pdinklag {
 
+using namespace random_permutation_internals;
+
 /**
  * \brief Generates a random permutation of positive numbers from a universe of given size with near-uniform distribution
  * 
