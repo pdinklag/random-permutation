@@ -53,8 +53,16 @@ Randomness is achieved by applying a two-phase permutation: we first permute the
 The library is header only, so all you need to do is make sure it's in your include path and:
 
 ```cpp
-#include "random_permutation.hpp"
+#include <random_permutation.hpp>
 ```
+
+In case you use CMake, you can embed this repository into yours (e.g., as a git submodule) and add it like so:
+
+```cmake
+add_subdirectory(path/to/random-permutation)
+```
+
+You can then link against the `random-permutation` interface library, which will automatically add the include directory to your target.
 
 ### API
 
