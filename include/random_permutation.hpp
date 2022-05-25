@@ -34,9 +34,16 @@
 
 #include "math_utils.hpp"
 
-namespace pdinklag {
+namespace random_permutation {
 
-using namespace random_permutation_internals;
+using namespace internal;
+
+/**
+ * \brief Returns the current timestamp of the system's highest resolution clock
+ * 
+ * \return the current timestamp of the system's highest resolution clock 
+ */
+inline uint64_t timestamp() { return std::chrono::high_resolution_clock::now().time_since_epoch().count(); }
 
 /**
  * \brief Generates a random permutation of positive numbers from a universe of given size with near-uniform distribution
@@ -137,13 +144,6 @@ private:
     };
 
 public:
-    /**
-     * \brief Returns the current timestamp of the system's highest resolution clock
-     * 
-     * \return the current timestamp of the system's highest resolution clock 
-     */
-    static inline uint64_t timestamp() { return std::chrono::high_resolution_clock::now().time_since_epoch().count(); }
-
     /**
      * \brief Initializes an empty permutation that contains only zero
      */

@@ -37,7 +37,7 @@
 
 int main(int argc, char** argv) {
     uint64_t u = 0xFFFFFFFFULL;
-    uint64_t seed = pdinklag::RandomPermutation::timestamp();
+    uint64_t seed = random_permutation::timestamp();
     uint64_t num = 10ULL;
     bool check = false;
 
@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     }
 
     // generate numbers
-    auto perm = pdinklag::RandomPermutation(u, seed);
+    auto perm = random_permutation::RandomPermutation(u, seed);
 
 #ifndef NDEBUG
     if(check) {

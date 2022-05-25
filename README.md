@@ -74,7 +74,7 @@ The API is very straightforward. Here's an example that generates a random permu
 
 int main(int argc, char** argv) {
     // print the first 100 numbers from a random permutation of [0, 2^16-1]
-    auto perm = pdinklag::RandomPermutation(UINT16_MAX);
+    auto perm = random_permutation::RandomPermutation(UINT16_MAX);
     for(unsigned i = 0; i < 100; i++) {
         std::cout << perm(x) << std::endl;
     }
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 }
 ```
 
-The system's high resolution timestamp is used as the random seed by default, which can be acquired by calling `pdinklag::RandomPermutation::timestamp()`. You can also provide an explicit random seed as the second parameter to the constructor.
+The system's high resolution timestamp is used as the random seed by default, which can be acquired by calling `random_permutation::timestamp()`. You can also provide an explicit random seed as the second parameter to the constructor.
 
 The `RandomPermutation` class also provides the STL-style iterators `begin` and `end`, allowing ranged for loops:
 
@@ -92,7 +92,7 @@ The `RandomPermutation` class also provides the STL-style iterators `begin` and 
 
 int main(int argc, char** argv) {
     // print a random permutation of the numbers from 0 to 100
-    auto perm = pdinklag::RandomPermutation(100);
+    auto perm = random_permutation::RandomPermutation(100);
     for(auto x : perm) std::cout << x << std::endl;
     return 0;
 }

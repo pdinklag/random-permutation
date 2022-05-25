@@ -31,7 +31,7 @@
 #include <bit>
 #include <cstdint>
 
-namespace pdinklag::random_permutation_internals {
+namespace random_permutation::internal {
 
 /**
  * \brief Computes 2 to the x-th power
