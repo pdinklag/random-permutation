@@ -1,5 +1,5 @@
 /**
- * math_utils.hpp
+ * internal/math_utils.hpp
  * part of pdinklag/random_permutation
  * 
  * MIT License
@@ -25,8 +25,8 @@
  * SOFTWARE.
  */
 
-#ifndef _MATH_UTILS_HPP
-#define _MATH_UTILS_HPP
+#ifndef _RANDOM_PERMUTATION_MATH_UTILS_HPP
+#define _RANDOM_PERMUTATION_MATH_UTILS_HPP
 
 #include <bit>
 #include <cstdint>

@@ -32,7 +32,7 @@
 #include <cstdint>
 #include <iterator>
 
-#include "math_utils.hpp"
+#include "internal/math_utils.hpp"
 
 namespace random_permutation {
 
